@@ -16,7 +16,7 @@ class CountryByIPTree:
     #   ftp://ftp.lacnic.net/pub/stats/
     url_template = 'ftp://ftp.ripe.net/pub/stats/%s/delegated-%s-latest'
     sources = {}
-    for name in ('arin', 'ripencc', 'apnic', 'lacnic'):
+    for name in ('arin', 'ripencc', 'apnic', 'lacnic', 'afrinic'):
         sources[name] = url_template % (name, name)
 
     def __init__(self):
