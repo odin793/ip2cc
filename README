@@ -11,9 +11,9 @@ allows to resolve country from IP address.
 
 USAGE
 
-ip2cc.py -update              - build/update database
-ip2cc.py <address>            - print country name for which
-                                <address> is registered
+update.py                   - build/update database
+ip2cc.py <address>          - print country name for which
+                              <address> is registered
 For example:
 $ ./ip2cc.py python.org
 python.org (194.109.137.226) is located in NETHERLANDS
@@ -32,6 +32,9 @@ Jason R. Mastaler
 Fredrik Lundh
 
 CHANGES
+
+0.3	- Due to bug in bsddb module (http://python.org/sf/788421) it's
+	  rewriten to use very simple own database.
 
 0.2	- Adopted to new format of registrars.
 	- Added LACNIC to sources.
