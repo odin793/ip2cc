@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # $Id$
 
-from urllib import urlopen
+from urllib2 import urlopen
 from socket import inet_aton, inet_ntoa
 import struct, sys, os
 from ip2cc import cc2name
