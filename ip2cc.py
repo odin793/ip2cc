@@ -1,11 +1,11 @@
-#!/usr/local/bin/python -O
+#!/usr/bin/env python
 # $Id$
 __version__ = '0.3'
 
 import re, struct
 
 
-is_IP = re.compile('^%s$' % '.'.join([r'((1?\d)?\d|2[0-4]\d|25[0-5])']*4)).match
+is_IP = re.compile('^%s$' % r'\.'.join([r'(?:(?:2[0-4]|1\d|[1-9])?\d|25[0-5])']*4)).match
 
 
 class CountryByIP:
