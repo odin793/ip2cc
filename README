@@ -34,7 +34,7 @@ Fredrik Lundh
 CHANGES
 
 0.3	- Due to bug in bsddb module (http://python.org/sf/788421) it's
-	  rewriten to use very simple own database.
+	  rewritten to use very simple own database.
 
 0.2	- Adopted to new format of registrars.
 	- Added LACNIC to sources.
