@@ -335,7 +335,14 @@ Content-Type: text/html
                 sys.exit(exc)
             else:
                 addr_str = '%s (%s)' % (addr, ip)
-        db = CountryByIP(db_file)
+        try:
+            db = CountryByIP(db_file)
+        except IOError, exc:
+            import errno
+            if exc.errno==errno.ENOENT:
+                sys.exit('Database not found. Run update.py to create it.')
+            else:
+                sys.exit('Cannot open database: %s' % exc)
         try:
             cc = db[ip]
         except KeyError:
