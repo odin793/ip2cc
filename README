@@ -33,6 +33,8 @@ Fredrik Lundh
 
 CHANGES
 
+0.4	- Added AfriNIC to sources.
+
 0.3	- Due to bug in bsddb module (http://python.org/sf/788421) it's
 	  rewritten to use very simple own database.
 
