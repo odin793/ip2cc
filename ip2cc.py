@@ -27,10 +27,10 @@ class CountryByIP:
                 else:
                     return value[2:]
             offset = struct.unpack('!I', value)[0]
-        raise RuntimeError('ip2cc database is briken') # must never reach here
+        raise RuntimeError('ip2cc database is broken') # must never reach here
 
     
-# ISO 3166-1 A2 codes (latest change: Wednesday 10 October 2003)
+# ISO 3166-1 A2 codes (latest change: 2009-03-03)
 cc2name = {
     'AD': 'ANDORRA',
     'AE': 'UNITED ARAB EMIRATES',
@@ -47,6 +47,7 @@ cc2name = {
     'AT': 'AUSTRIA',
     'AU': 'AUSTRALIA',
     'AW': 'ARUBA',
+    'AX': '\xc5LAND ISLANDS',
     'AZ': 'AZERBAIJAN',
     'BA': 'BOSNIA AND HERZEGOVINA',
     'BB': 'BARBADOS',
@@ -57,6 +58,7 @@ cc2name = {
     'BH': 'BAHRAIN',
     'BI': 'BURUNDI',
     'BJ': 'BENIN',
+    'BL': 'SAINT BARTH\xc9LEMY',
     'BM': 'BERMUDA',
     'BN': 'BRUNEI DARUSSALAM',
     'BO': 'BOLIVIA',
@@ -73,14 +75,13 @@ cc2name = {
     'CF': 'CENTRAL AFRICAN REPUBLIC',
     'CG': 'CONGO',
     'CH': 'SWITZERLAND',
-    'CI': "COTE D'IVOIRE",
+    'CI': "C\xd4TE D'IVOIRE",
     'CK': 'COOK ISLANDS',
     'CL': 'CHILE',
     'CM': 'CAMEROON',
     'CN': 'CHINA',
     'CO': 'COLOMBIA',
     'CR': 'COSTA RICA',
-    'CS': 'SERBIA AND MONTENEGRO',
     'CU': 'CUBA',
     'CV': 'CAPE VERDE',
     'CX': 'CHRISTMAS ISLAND',
@@ -110,6 +111,7 @@ cc2name = {
     'GD': 'GRENADA',
     'GE': 'GEORGIA',
     'GF': 'FRENCH GUIANA',
+    'GG': 'GUERNSEY',
     'GH': 'GHANA',
     'GI': 'GIBRALTAR',
     'GL': 'GREENLAND',
@@ -132,12 +134,14 @@ cc2name = {
     'ID': 'INDONESIA',
     'IE': 'IRELAND',
     'IL': 'ISRAEL',
+    'IM': 'ISLE OF MAN',
     'IN': 'INDIA',
     'IO': 'BRITISH INDIAN OCEAN TERRITORY',
     'IQ': 'IRAQ',
     'IR': 'IRAN, ISLAMIC REPUBLIC OF',
     'IS': 'ICELAND',
     'IT': 'ITALY',
+    'JE': 'JERSEY',
     'JM': 'JAMAICA',
     'JO': 'JORDAN',
     'JP': 'JAPAN',
@@ -166,6 +170,8 @@ cc2name = {
     'MA': 'MOROCCO',
     'MC': 'MONACO',
     'MD': 'MOLDOVA, REPUBLIC OF',
+    'ME': 'MONTENEGRO',
+    'MF': 'SAINT MARTIN',
     'MG': 'MADAGASCAR',
     'MH': 'MARSHALL ISLANDS',
     'MK': 'MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF',
@@ -212,8 +218,9 @@ cc2name = {
     'PW': 'PALAU',
     'PY': 'PARAGUAY',
     'QA': 'QATAR',
-    'RE': 'REUNION',
+    'RE': 'R\xc9UNION',
     'RO': 'ROMANIA',
+    'RS': 'SERBIA',
     'RU': 'RUSSIAN FEDERATION',
     'RW': 'RWANDA',
     'SA': 'SAUDI ARABIA',
@@ -259,7 +266,7 @@ cc2name = {
     'UZ': 'UZBEKISTAN',
     'VA': 'HOLY SEE (VATICAN CITY STATE)',
     'VC': 'SAINT VINCENT AND THE GRENADINES',
-    'VE': 'VENEZUELA',
+    'VE': 'VENEZUELA, BOLIVARIAN REPUBLIC OF',
     'VG': 'VIRGIN ISLANDS, BRITISH',
     'VI': 'VIRGIN ISLANDS, U.S.',
     'VN': 'VIET NAM',
@@ -275,10 +282,11 @@ cc2name = {
 
 # Additional codes used by registrars
 cc2name.update({
-    'UK': cc2name['GB'],
+    #'UK': cc2name['GB'],
+    #'YU': 'FORMER YUGOSLAVIA',
+    'CS': 'SERBIA AND MONTENEGRO',
     'EU': 'EUROPEAN UNION',
     'AP': 'ASSIGNED PORTABLE',
-    'YU': 'FORMER YUGOSLAVIA',
 })
 
 
