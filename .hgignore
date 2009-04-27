@@ -1,4 +1,4 @@
-^ip2cc.db$
+^ip2(cc|ru).db$
 \.py[co]$
 ~$
 \.swp$
