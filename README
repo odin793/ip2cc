@@ -1,7 +1,7 @@
 		  ip2cc: Lookup country country by IP address
                   ===========================================
 
-(c) 2002 Denis S. Otkidach
+(c) 2002-2009 Denis S. Otkidach
 
 WHAT IS IT
 
@@ -13,6 +13,9 @@ USAGE
 
 update.py                   - build/update database
 ip2cc.py <address>          - print country name for which
+                              <address> is registered
+update_ru.py                - build/update database of Russia regions
+ip2ru.py <address>          - print Russia region name for which
                               <address> is registered
 For example:
 $ ./ip2cc.py python.org
@@ -33,6 +36,9 @@ Fredrik Lundh
 
 CHANGES
 
+0.5	- ISO 3166-1 countries list is updated. Module to resolve Russia region
+	  added.
+
 0.4	- Added AfriNIC to sources.
 
 0.3	- Due to bug in bsddb module (http://python.org/sf/788421) it's
@@ -43,4 +49,4 @@ CHANGES
 	- Fixed contry code map and added -check option to simplify
 	  maintainance.
 
-0.1	Initial release
+0.1	- Initial release
