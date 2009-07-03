@@ -3,13 +3,9 @@
 #include <string.h>
 #include <math.h>
 
-int main(int argc, char* argv[]){
-    if (argc != 2) {
-        printf("Usage:\n\tip2cc <IPADDRESS>\n\n");
-        return 1;
-    }
-    char ip[strlen(argv[1])];
-    strcpy(ip, argv[1]);
+char* ip2cc(char* raw_ip) {
+    char ip[strlen(raw_ip)];
+    strcpy(ip, raw_ip);
     ip[strlen(ip)] = '.';
     int c = 0, pos = 0, c_pos = 0, len = strlen(ip), i = 0, parsed_ip[4];
     char chunk[len];
@@ -36,11 +32,15 @@ int main(int argc, char* argv[]){
         fread(value, sizeof(value), 4, fp);
         if (value[0] == -1 && value[1] == -1) {
            if (value[2] == 0 && value[3] == 0) {
-               printf("not found\n");
-               return 1;
+               return (char*)"not found";
            }
-           printf("%c%c\n", value[2], value[3]);
-           return 0;
+           char cc[3];
+           cc[0] = value[2];
+           cc[1] = value[3];
+           cc[2] = '\0';
+           char* ret;
+           strcpy(ret, cc);
+           return ret;
         }
         for (c=0; c<4; c++) {
             if ((int) value[c] < 0) {
@@ -54,6 +54,22 @@ int main(int argc, char* argv[]){
             offset = offset + ivalue[c] * ((int)pow(256, 3-c));
         }
     }
-    printf("broken db\n");
-    return -1;
+    return (char*)"broken db";
+}
+
+int main(int argc, char* argv[]){
+    if (argc != 2) {
+        printf("Usage:\n\tip2cc <IPADDRESS>\n\n");
+        return 1;
+    }
+    char* cc = ip2cc(argv[1]);
+    int len = strlen(cc);
+    char code[len];
+    strcpy(code, cc);
+    printf("%s\n", code);
+    if (len == 2) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
