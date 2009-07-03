@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-char* ip2cc(char* raw_ip) {
+char* ip2cc(char* raw_ip, const char* db_file) {
     char ip[strlen(raw_ip)];
     strcpy(ip, raw_ip);
     ip[strlen(ip)] = '.';
@@ -25,7 +25,7 @@ char* ip2cc(char* raw_ip) {
     }
     int start, offset = 0, ivalue[4];
     char value[4];
-    FILE* fp = fopen("ip2cc.db", "r");
+    FILE* fp = fopen(db_file, "r");
     for (i=0; i<4; i++) {
         start = offset + parsed_ip[i] * 4;
         fseek(fp, start, SEEK_SET); 
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]){
         printf("Usage:\n\tip2cc <IPADDRESS>\n\n");
         return 1;
     }
-    char* cc = ip2cc(argv[1]);
+    char* cc = ip2cc(argv[1], "../../ip2cc.db");
     int len = strlen(cc);
     char code[len];
     strcpy(code, cc);

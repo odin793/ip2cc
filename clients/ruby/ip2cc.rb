@@ -28,7 +28,7 @@ class Ip2cc
 end
 
 if __FILE__ == $0 then
-  db = Ip2cc.new 'ip2cc.db'
+  db = Ip2cc.new '../../ip2cc.db'
   if ARGV.length == 1 then
     puts(db[ARGV[0]])
   else

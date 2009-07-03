@@ -42,7 +42,7 @@ class IP2CC implements ArrayAccess {
 
 if ($_SERVER['argc'] > 1 && realpath($_SERVER['argv'][0]) == __file__ ){
   
-  $a = new IP2CC('ip2cc.db');
+  $a = new IP2CC('../../ip2cc.db');
   $ip = $_SERVER['argv'][1];
   print "{$a[$ip]}\n";
   
