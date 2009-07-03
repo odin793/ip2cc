@@ -6,8 +6,8 @@ class IP2CC
     @filename = filename
   end
   
-  def get(ip)
-    throw :invalid_ip unless ip =~ VALID_IP
+  def [](ip, opts={})
+    raise 'invalid ip' unless ip =~ VALID_IP
     open(@filename) do |f|
       offset = 0
       ip.split('.').each do |part|
@@ -15,13 +15,16 @@ class IP2CC
        f.seek start
        value = f.read 4
        if value.slice(0, 2) == "\xFF\xFF" then
-         throw :not_found if value.slice(2, 2) == "\x00\x00"
+         if value.slice(2, 2) == "\x00\x00" then
+           raise 'not found' if opts[:raise] 
+           return nil
+         end
          return value.slice(2, 2)
        end
        offset = value.unpack('N')[0]
       end
     end
-    throw :broken_db
+    raise 'broken db'
   end
   
 end
@@ -29,8 +32,8 @@ end
 if __FILE__ == $0 then
   db = IP2CC.new 'ip2cc.db'
   if ARGV.length == 1 then
-    puts db.get(ARGV[0])
+    puts db[ARGV[0]]
   else
-    ARGV.each{ |ip| puts "#{ip} #{db.get(ip)}" }
+    ARGV.each{ |ip| puts "#{ip} #{db[ip]}" }
   end
 end
