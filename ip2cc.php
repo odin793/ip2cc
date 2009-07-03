@@ -2,6 +2,8 @@
 
 class IP2CC implements ArrayAccess {
   
+  public $filename;
+  
   public function __construct($filename) {
     $this->filename = $filename;
   }
@@ -38,11 +40,10 @@ class IP2CC implements ArrayAccess {
   
 }
 
-if (count($argv) > 1 && realpath($argv[0]) == __file__ ){
+if ($_SERVER['argc'] > 1 && realpath($_SERVER['argv'][0]) == __file__ ){
   
   $a = new IP2CC('ip2cc.db');
-  $ip = $argv[1];
-  print "$a[$ip]\n";
+  $ip = $_SERVER['argv'][1];
+  print "{$a[$ip]}\n";
   
 }
-
