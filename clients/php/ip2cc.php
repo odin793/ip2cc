@@ -19,13 +19,16 @@ class IP2CC implements ArrayAccess {
       if (substr($value, 0, 2) == "\xFF\xFF") {
         $res = substr($value, 2, 2);
         if ($res == "\x00\x00") {
+          fclose($fp);
           return;
         }
+        fclose($fp);
         return $res;
       }
       $chunks = unpack('N', $value);
       $offset = $chunks[1];
     }
+    fclose($fp);
     throw new Exception('broken db');
   }
   
