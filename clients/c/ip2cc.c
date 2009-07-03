@@ -32,6 +32,7 @@ char* ip2cc(char* raw_ip, const char* db_file) {
         fread(value, sizeof(value), 4, fp);
         if (value[0] == -1 && value[1] == -1) {
            if (value[2] == 0 && value[3] == 0) {
+               fclose(fp);
                return (char*)"not found";
            }
            char cc[3];
@@ -40,6 +41,7 @@ char* ip2cc(char* raw_ip, const char* db_file) {
            cc[2] = '\0';
            char* ret;
            strcpy(ret, cc);
+           fclose(fp);
            return ret;
         }
         for (c=0; c<4; c++) {
@@ -54,6 +56,7 @@ char* ip2cc(char* raw_ip, const char* db_file) {
             offset = offset + ivalue[c] * ((int)pow(256, 3-c));
         }
     }
+    fclose(fp);
     return (char*)"broken db";
 }
 
