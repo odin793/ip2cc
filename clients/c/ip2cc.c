@@ -3,11 +3,18 @@
 #include <string.h>
 #include <math.h>
 
+unsigned long bu_int(const unsigned char *p) {
+    unsigned long x = 0;
+    x = p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+    return x;
+}
+
 int ip2cc(char* cc, char* raw_ip, const char* db_file) {
-    char ip[strlen(raw_ip)];
+    int len = strlen(raw_ip) + 1;
+    char ip[len];
     strcpy(ip, raw_ip);
     ip[strlen(ip)] = '.';
-    int c = 0, pos = 0, c_pos = 0, len = strlen(ip), i = 0, parsed_ip[4];
+    int c = 0, pos = 0, c_pos = 0, i = 0, parsed_ip[4];
     char chunk[len];
     while (pos < len) {
         if (ip[pos] == '.') {
@@ -23,15 +30,15 @@ int ip2cc(char* cc, char* raw_ip, const char* db_file) {
         }
         pos ++;
     }
-    int start, offset = 0, ivalue[4];
-    char value[4];
+    unsigned long start, offset = 0;
+    unsigned char value[4];    
     FILE* fp = fopen(db_file, "r");
     for (i=0; i<4; i++) {
         start = offset + parsed_ip[i] * 4;
         fseek(fp, start, SEEK_SET); 
         fread(&value[0], (size_t) 1, 4, fp);
-        if (value[0] == -1 && value[1] == -1) {
-            if (value[2] == 0 && value[3] == 0) {
+        if (value[0] == 0xff && value[1] == 0xff) {
+            if (value[2] == 0x00 && value[3] == 0x00) {
                 fclose(fp);
                 return 1;
             }
@@ -41,17 +48,7 @@ int ip2cc(char* cc, char* raw_ip, const char* db_file) {
             fclose(fp);
             return 0;
         }
-        for (c=0; c<4; c++) {
-            if ((int) value[c] < 0) {
-                ivalue[c] = 256 + (int) value[c];
-            } else {
-                ivalue[c] = (int) value[c];
-            }
-        }
-        offset = 0;
-        for (c=0; c<4; c++) {
-            offset = offset + ivalue[c] * ((int)pow(256, 3-c));
-        }
+        offset = bu_int((const unsigned char*)&value[0]);        
     }
     fclose(fp);
     return 2;
