@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-char* ip2cc(char* raw_ip, const char* db_file) {
+int ip2cc(char* cc, char* raw_ip, const char* db_file) {
     char ip[strlen(raw_ip)];
     strcpy(ip, raw_ip);
     ip[strlen(ip)] = '.';
@@ -29,20 +29,17 @@ char* ip2cc(char* raw_ip, const char* db_file) {
     for (i=0; i<4; i++) {
         start = offset + parsed_ip[i] * 4;
         fseek(fp, start, SEEK_SET); 
-        fread(value, sizeof(value), 4, fp);
+        fread(&value[0], (size_t) 1, 4, fp);
         if (value[0] == -1 && value[1] == -1) {
-           if (value[2] == 0 && value[3] == 0) {
-               fclose(fp);
-               return (char*)"not found";
-           }
-           char cc[3];
-           cc[0] = value[2];
-           cc[1] = value[3];
-           cc[2] = '\0';
-           char* ret;
-           strcpy(ret, cc);
-           fclose(fp);
-           return ret;
+            if (value[2] == 0 && value[3] == 0) {
+                fclose(fp);
+                return 1;
+            }
+            cc[0] = value[2];
+            cc[1] = value[3];
+            cc[2] = '\0';
+            fclose(fp);
+            return 0;
         }
         for (c=0; c<4; c++) {
             if ((int) value[c] < 0) {
@@ -57,7 +54,7 @@ char* ip2cc(char* raw_ip, const char* db_file) {
         }
     }
     fclose(fp);
-    return (char*)"broken db";
+    return 2;
 }
 
 int main(int argc, char* argv[]){
@@ -65,14 +62,16 @@ int main(int argc, char* argv[]){
         printf("Usage:\n\tip2cc <IPADDRESS>\n\n");
         return 1;
     }
-    char* cc = ip2cc(argv[1], "../../ip2cc.db");
-    int len = strlen(cc);
-    char code[len];
-    strcpy(code, cc);
-    printf("%s\n", code);
-    if (len == 2) {
-        return 0;
+    char cc[3];
+    int ret = ip2cc(&cc[0], argv[1], "../../ip2cc.db");
+    if (ret) {
+        if (ret == 1) {
+            printf("not found\n");
+        } else if (ret == 2) {
+            printf("broken db\n");
+        }
     } else {
-        return 1;
+        printf("%s\n", &cc[0]);
     }
+    return ret;
 }
