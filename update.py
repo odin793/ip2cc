@@ -93,7 +93,7 @@ class CountryByIPTree(IPTree):
     #   ftp://ftp.arin.net/pub/stats/
     #   ftp://ftp.apnic.net/pub/stats/
     #   ftp://ftp.lacnic.net/pub/stats/
-    url_template = 'ftp://ftp.ripe.net/pub/stats/%s/delegated-%s-latest'
+    url_template = 'ftp://ftp.ripe.net/pub/stats/%s/delegated-%s-extended-latest'
     sources = {}
     for name in ('arin', 'ripencc', 'apnic', 'lacnic', 'afrinic'):
         sources[name] = url_template % (name, name)
