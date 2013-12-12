@@ -5,32 +5,58 @@ import os
 import mmap
 import re
 import struct
+import array
+import sys
 
+try:
+    from speedups import ip2cc as ip2cc_speedup
+    C_EXT = True
+except ImportError:
+    C_EXT = False
 
 is_IP = re.compile('^%s$' % r'\.'.join([r'(?:(?:2[0-4]|1\d|[1-9])?\d|25[0-5])']*4)).match
 
 
 class CountryByIP:
 
-    def __init__(self, filename):
-        fd = os.open(filename, os.O_RDONLY)
-        self.fp = mmap.mmap(fd, 0, prot=mmap.PROT_READ)
+    @property
+    def _array_type(self):
+        for t in "IL":
+            if array.array(t).itemsize == 4:
+                return t
 
-    def __getitem__(self, ip):
-        offset = 0
-        fp = self.fp
-        for part in ip.split('.'):
-            start = offset+int(part)*4
-            fp.seek(start)
-            value = fp.read(4)
-            assert len(value)==4
-            if value[:2]=='\xFF\xFF':
-                if value[2:]=='\x00\x00':
+    def __init__(self, filename):
+        length = os.path.getsize(filename)
+        self.fp = open(filename, "rb")
+        try:
+            self.ary = array.array(self._array_type)
+            self.ary.fromfile(self.fp, length / 4)
+            self.ary.byteswap()
+        finally:
+            self.fp.close()
+        addr, _ = self.ary.buffer_info()
+        self.addr = addr
+
+    if C_EXT:
+        
+        def __getitem__(self, ip):
+            return ip2cc_speedup(self.addr, ip)
+
+    else:
+
+        def __getitem__(self, ip):
+            offset = 0
+            ary = self.ary
+            for part in ip.split("."):
+                start = offset + int(part)
+                value = ary[start]
+                if value == 0xffff0000:
                     raise KeyError(ip)
+                elif value > 0xffff0000:
+                    return chr((value & 0xffff) >> 8) + chr(value & 0xff)
                 else:
-                    return value[2:]
-            offset = struct.unpack('!I', value)[0]
-        raise RuntimeError('ip2cc database is broken') # must never reach here
+                    offset = value >> 2
+            raise RuntimeError("ip2cc database is broken")
 
     
 import iso3166_1

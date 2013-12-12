@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from update import IPTree
+from fetch import IPTree
 from iso3166_2_ru import cc2name
 import codecs, logging, os, sys
 from urllib2 import urlopen
@@ -48,8 +48,7 @@ class RussiaRegionByIP(IPTree):
                 break
             self.add(first, last, code)
 
-
-if __name__=='__main__':
+def fetch():
     logging.basicConfig(level=logging.INFO)
     tree = RussiaRegionByIP()
     tree.fetch()
@@ -59,3 +58,7 @@ if __name__=='__main__':
     db.write(tree.dump())
     db.close()
     os.rename(db_file+'.new', db_file)
+
+
+if __name__=='__main__':
+    fetch()

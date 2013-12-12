@@ -1,0 +1,6 @@
+*.pyc
+/venv
+/ip2cc.egg-info
+/ip2cc.db
+/dist
+/build

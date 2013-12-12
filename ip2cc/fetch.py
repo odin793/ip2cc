@@ -3,7 +3,7 @@
 from urllib2 import urlopen
 from socket import inet_aton, inet_ntoa
 import struct, sys, os, logging
-from ip2cc import cc2name
+from lookup import cc2name
 
 logger = logging.getLogger(__name__)
 
@@ -121,14 +121,16 @@ class CountryByIPTree(IPTree):
             logger.warning('Unknown country code %r\n', cc)
         IPTree.add(self, start, end, cc)
 
-
-if __name__=='__main__':
+def fetch():
     logging.basicConfig(level=logging.INFO)
     tree = CountryByIPTree()
     tree.fetch()
     tree.optimize()
-    db_file = os.path.join(os.path.dirname(sys.argv[0]), 'ip2cc.db')
+    db_file = 'ip2cc.db'
     db = open(db_file+'.new', 'wb')
     db.write(tree.dump())
     db.close()
     os.rename(db_file+'.new', db_file)
+
+if __name__=='__main__':
+    fetch()
