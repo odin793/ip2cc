@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 __version__ = '0.5'
 
-import re, struct
+import os
+import mmap
+import re
+import struct
 
 
 is_IP = re.compile('^%s$' % r'\.'.join([r'(?:(?:2[0-4]|1\d|[1-9])?\d|25[0-5])']*4)).match
@@ -10,7 +13,8 @@ is_IP = re.compile('^%s$' % r'\.'.join([r'(?:(?:2[0-4]|1\d|[1-9])?\d|25[0-5])']*
 class CountryByIP:
 
     def __init__(self, filename):
-        self.fp = open(filename, 'rb')
+        fd = os.open(filename, os.O_RDONLY)
+        self.fp = mmap.mmap(fd, 0, prot=mmap.PROT_READ)
 
     def __getitem__(self, ip):
         offset = 0
