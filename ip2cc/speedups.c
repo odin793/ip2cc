@@ -16,7 +16,7 @@ void parse_ip(const char *raw_ip, int *parsed_ip) {
 static PyObject *ip2cc(PyObject *self, PyObject *args) {
   u_int32_t *data, start, value, offset = 0;
   const char *raw_ip;
-  char cc[3] = {0};
+  char cc[2];
   int i, ip[4] = {0};
   if (! PyArg_ParseTuple(args, "ls", &data, &raw_ip)) {
     return NULL;
@@ -29,9 +29,9 @@ static PyObject *ip2cc(PyObject *self, PyObject *args) {
       PyErr_SetString(PyExc_KeyError, raw_ip);
       return NULL;
     } else if (value > 0xffff0000) {
-      cc[0] = (value & 0xffff) >> 8;
+      cc[0] = (value & 0xff00) >> 8;
       cc[1] = value & 0xff;
-      return Py_BuildValue("s", cc);
+      return PyString_FromStringAndSize(cc, 2);
     } else {
       offset = value >> 2;
     }
