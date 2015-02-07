@@ -23,7 +23,7 @@ class IPTree(object):
         if isinstance(tree[idx], str):
             tree[idx] = [tree[idx]]*256
         return tree[idx]
-    
+
     def _set_range(self, tree, start, end, value):
         assert isinstance(tree, list)
         assert len(start)==len(end)

@@ -8,35 +8,21 @@ from fetch import IPTree
 class FullIPTree(IPTree):
     """IP tree capable of storing all IPv4 addresses"""
 
-    def __init__(self, value_length):
+    def __init__(self, config):
         super(FullIPTree, self).__init__()
-        self.value_length = value_length  # in bytes
 
-        # Number of nodes in tree is 256**4 + 256**3 + 256**2 + 256.
-        # It means we need 33 bits to address all nodes.
-        # So address block size in bytes will be 5.
-        self._address_block_size = 5  # in bytes
-
-        # Each node consists of 2-bits service flag and value.
-        # Value can be address offset or actual stored value (e.g city code).
-
-        # If value_length is at most address_block_size - 1 (4 bytes), it's
-        # enough to have nodes with the same size as address_block_size,
-        # because we have 5 * 8 - 2 = 38 bits available (more than 4 bytes).
-        # If value_length is more than address_block_size - 1  we have to
-        # increase node size.
-
-        if self.value_length <= self._address_block_size - 1:
-            self._node_size = self._address_block_size
-        else:
-            self._node_size = self.value_length + 1
+        self.value_length = config.value_length  # in bytes
+        self._address_block_size = config.address_block_size  # in bytes
+        self._node_size = config.node_size  # in bytes
+        self._fname = config.fname
 
         self._tree = 256 * [None]
-        self._value_flag = 0b11000000  # nodes stores actual code
+        self._value_flag = 0b11000000  # node stores actual code
         self._undefined_flag = 0b01000000  # node's content is undefined
         self._offset_flag = 0b00000000  # node stores address offset
 
-    def write(self, fname):
+    def write(self, fname=None):
+        fname = fname or self._fname
         with open(fname, 'wb') as fp:
             fp.write(self.dump())
 
@@ -60,9 +46,8 @@ class FullIPTree(IPTree):
                 assert len(high_byte + zeros) == self._node_size
                 offsets.append(high_byte + zeros)
             else:  # address offset to reach next node
-                high_byte = end >> 32
-                low_bytes = end & 0xffffffff  # 4 bytes integer
-                # merge address offset high byte with offset flag
+                high_byte, low_bytes = end >> 32, end & 0xffffffff
+                # merge service flag with address offset high byte
                 high_byte = self._offset_flag | high_byte
                 address_block = struct.pack('!BI', high_byte, low_bytes)
                 zeros = '\x00' * (self._node_size - self._address_block_size)
