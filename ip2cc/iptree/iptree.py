@@ -2,7 +2,7 @@
 
 import struct
 
-from fetch import IPTree
+from ..fetch import IPTree
 
 
 class FullIPTree(IPTree):
